@@ -1,0 +1,19 @@
+{
+    "Version": "2012-10-17",
+    "Id": "lambda-specific-access-policy",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Principal": {
+          "Service": "lambda.amazonaws.com"
+        },
+        "Action": "sns:Publish",
+        "Resource": "ARN_TOPICO_SNS",
+        "Condition": {
+          "StringEquals": {
+            "AWS:SourceArn": "ARN_FUNCAO_LAMBDA"
+          }
+        }
+      }
+    ]
+  }  

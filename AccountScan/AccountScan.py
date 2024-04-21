@@ -1,15 +1,21 @@
 import boto3
 
-# check active resources
-def check_resources():
+# running instances check
+def check_ec2_running():
     ec2 = boto3.client('ec2')
-    eks = boto3.client('eks')
-    ec2_resources = ec2.describe_instances()
-    eks_clusters = eks.list_clusters()
+    ec2_instances = ec2.describe_instances(Filters=[{'Name': 'instance-state-name', 'Values': ['running']}])
 
-    ec2_active = len(ec2_resources['Reservations']) > 0
+    return len(ec2_instances['Reservations']) > 0
+
+# check resources active
+def check_resources():
+    ec2_active = check_ec2_running()
+    
+    eks = boto3.client('eks')
+    eks_clusters = eks.list_clusters()
     eks_active = len(eks_clusters['clusters']) > 0
 
+    ec2 = boto3.client('ec2')
     ec2_gateways = ec2.describe_nat_gateways()
     nat_gateway_active = len(ec2_gateways['NatGateways']) > 0
 
